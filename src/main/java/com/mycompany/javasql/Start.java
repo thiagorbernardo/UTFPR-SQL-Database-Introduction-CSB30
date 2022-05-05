@@ -6,8 +6,6 @@ import java.util.*;
 import com.mycompany.javasql.Managers.*;
 import com.mycompany.javasql.Save.*;
 
-import javax.xml.transform.Result;
-
 public class Start {
     public static void main(String[] args) {
         ConnectionManager connectionManager = new ConnectionManager();
@@ -31,7 +29,7 @@ public class Start {
             Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
             ResultSet rs = st.executeQuery("SELECT * FROM student");
 
-            ExportJSON test = new ExportJSON("result.json");
+            ExportJSON test = new ExportJSON(System.currentTimeMillis() + ".json");
             ResultMap resultMap = new ResultMap();
 
             while (rs.next()) {
