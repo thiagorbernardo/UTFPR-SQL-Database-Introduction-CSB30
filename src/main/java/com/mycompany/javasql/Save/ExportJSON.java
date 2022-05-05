@@ -8,49 +8,40 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-public class SaveJSON {
+public class ExportJSON {
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private String filePath = "src/main/resources/save/save.json";
+    private String filePath = "src/main/resources/export/";
 
     private final FileManager fileManager;
 
-    public SaveJSON(String path) {
-        this.filePath = path;
-        this.fileManager = new FileManager(path, "");
+    public ExportJSON(String path) {
+        this.filePath += path;
+        this.fileManager = new FileManager(this.filePath, "");
     }
 
-    /**
-     * Reading save file
-     *
-     * @return a Save object
-     */
-    public Save read() {
+    public Object read() {
         this.fileManager.createFile();
 
-        Save save = null;
+        Object save = null;
         try {
             FileReader fileReader = new FileReader(this.filePath, StandardCharsets.UTF_8);
 
-            save = this.gson.fromJson(fileReader, new TypeToken<Save>() {
+            save = this.gson.fromJson(fileReader, new TypeToken<Object>() {
             }.getType());
 
             fileReader.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if(save == null || save.isSaveEmpty()){
-            return new Save();
+        if(save == null){
+            return new Object();
         }
         return save;
     }
 
-    /**
-     * Saving object of save
-     *
-     * @param save object
-     */
-    public void save(Save save) {
-        save.setUpdatedAt();
-        this.fileManager.saveString(this.gson.toJson(save), false);
+    public void save(ResultMap result) {
+        String json = this.gson.toJson(result.getData());
+        System.out.println(json);
+        this.fileManager.saveString(this.gson.toJson(result.getData()), false);
     }
 }

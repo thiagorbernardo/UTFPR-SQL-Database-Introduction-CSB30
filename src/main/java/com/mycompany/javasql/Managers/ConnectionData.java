@@ -1,4 +1,4 @@
-package com.mycompany.javasql.Save;
+package com.mycompany.javasql.Managers;
 
 import java.util.UUID;
 

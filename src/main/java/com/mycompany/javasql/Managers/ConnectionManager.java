@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.*;
 
 public class ConnectionManager {
-    private final SaveJSON saveJson = new SaveJSON();
+    private final SaveJSON saveJson = new SaveJSON("src/main/resources/save/save.json");
     private final Save save;
     private Connection connection;
     private DatabaseMetaData databaseMetaData;

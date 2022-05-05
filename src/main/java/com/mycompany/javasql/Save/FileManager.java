@@ -20,7 +20,7 @@ public class FileManager {
 
         if (!file.exists()) {
             try {
-                if(!file.getParentFile().exists())
+                if(file.getParentFile() != null && !file.getParentFile().exists())
                     file.getParentFile().mkdirs();
 
                 file.createNewFile();

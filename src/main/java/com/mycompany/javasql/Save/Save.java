@@ -1,8 +1,9 @@
 package com.mycompany.javasql.Save;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Objects;
+
+import com.mycompany.javasql.Managers.ConnectionData;
 
 public class Save {
     public long createdAt = System.currentTimeMillis();
