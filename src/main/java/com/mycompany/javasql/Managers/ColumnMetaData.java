@@ -12,4 +12,8 @@ public class ColumnMetaData {
         this.size = size;
         this.isPrimaryKey = isPrimaryKey;
     }
+
+    public String getName(){
+        return  this.name;
+    }
 }

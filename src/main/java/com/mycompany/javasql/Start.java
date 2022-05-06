@@ -7,7 +7,7 @@ import com.mycompany.javasql.Managers.*;
 import com.mycompany.javasql.Save.*;
 
 public class Start {
-    public static void main(String[] args) {
+    public void begin() {
         ConnectionManager connectionManager = new ConnectionManager();
 
         ArrayList<ConnectionData> connections = connectionManager.getConnections();
@@ -16,7 +16,7 @@ public class Start {
             connectionManager.newConnection(new ConnectionData(
                     "jdbc:mysql://localhost/university",
                     "root",
-                    "thi109032"));
+                    "jjJJ@12345"));
         }
 
         ConnectionData conData = connectionManager.getConnections().get(0);
@@ -46,10 +46,16 @@ public class Start {
             test.save(resultMap);
 
             connectionManager.getTables();
-            connectionManager.dispose();
+//            connectionManager.dispose();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Tela(connectionManager).setVisible(true);
+            }
+        });
 
         // for (ConnectionData con : connectionManager.getConnections()) {
         // System.out.println(con.getUrl());

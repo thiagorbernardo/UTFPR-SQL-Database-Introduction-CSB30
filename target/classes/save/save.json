@@ -1,12 +1,12 @@
 {
-  "createdAt": 1651728533543,
-  "updatedAt": 1651728533561,
+  "createdAt": 1651796189321,
+  "updatedAt": 1651796189460,
   "connections": [
     {
-      "id": "786ce1e4-9f61-4829-8d84-9a2e96190e71",
+      "id": "f825f950-6df1-435c-9727-89c65fc2315c",
       "url": "jdbc:mysql://localhost/university",
       "user": "root",
-      "password": "thi109032"
+      "password": "jjJJ@12345"
     }
   ]
 }

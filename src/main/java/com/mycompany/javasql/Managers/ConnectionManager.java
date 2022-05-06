@@ -10,6 +10,7 @@ public class ConnectionManager {
     private final Save save;
     private Connection connection;
     private DatabaseMetaData databaseMetaData;
+    private int tablenumber = 0;
 
     public ConnectionManager() {
         this.save = this.saveJson.read();
@@ -44,7 +45,9 @@ public class ConnectionManager {
         String[] types = {"TABLE", "VIEW"};
         ResultSet tables = this.databaseMetaData.getTables(this.connection.getCatalog(), null, "%", types);
         ArrayList<TableMetaData> result = new ArrayList<>();
+
         while (tables.next()) {
+            tablenumber++;
             TableMetaData table = new TableMetaData(
                     tables.getString("TABLE_CAT"),
                     tables.getString("TABLE_NAME"),
@@ -77,5 +80,9 @@ public class ConnectionManager {
 
     public void dispose() throws SQLException {
         this.connection.close();
+    }
+
+    public int getTablenumber(){
+        return tablenumber/2;
     }
 }

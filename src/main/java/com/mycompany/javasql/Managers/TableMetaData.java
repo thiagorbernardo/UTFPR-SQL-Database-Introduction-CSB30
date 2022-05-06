@@ -44,4 +44,16 @@ public class TableMetaData {
         System.out.println(columns);
         System.out.println();
     }
+
+    public String getCatalog(){
+        return this.catalog;
+    }
+
+    public String getName(){
+        return this.name;
+    }
+
+    public ArrayList<ColumnMetaData> getColumns(){
+        return columns;
+    }
 }
