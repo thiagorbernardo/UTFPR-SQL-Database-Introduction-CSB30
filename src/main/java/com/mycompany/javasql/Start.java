@@ -29,30 +29,36 @@ public class Start {
             Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
             ResultSet rs = st.executeQuery("SELECT * FROM student");
 
-            ExportJSON test = new ExportJSON(System.currentTimeMillis() + ".json");
-            ResultMap resultMap = new ResultMap();
+            Export test = new Export(System.currentTimeMillis() + "");
+            ResultMap rsMap = new ResultMap();
+            ResultSetMetaData rsmd = rs.getMetaData();
+            ArrayList<Object> header = new ArrayList<>();
+
+            for (int i = 1; i <= rsmd.getColumnCount(); i++ ) {
+                header.add(rsmd.getColumnName(i));
+            }
+
+            rsMap.addCSVItem(header);
 
             while (rs.next()) {
-                Map<String, Object> item = new HashMap<>();
-
-                ResultSetMetaData rsmd = rs.getMetaData();
+                Map<String, Object> itemJSON = new HashMap<>();
+                ArrayList<Object> itemCSV = new ArrayList<>();
 
                 for (int i = 1; i <= rsmd.getColumnCount(); i++ ) {
-                    item.put(rsmd.getColumnName(i), rs.getObject(i));
+                    itemJSON.put(rsmd.getColumnName(i), rs.getObject(i));
+                    itemCSV.add(rs.getObject(i));
                 }
 
-                resultMap.addItem(item);
+                rsMap.addJSONItem(itemJSON);
+                rsMap.addCSVItem(itemCSV);
             }
-            test.save(resultMap);
+            test.saveJSON(rsMap);
+            test.saveCSV(rsMap);
 
             connectionManager.getTables();
             connectionManager.dispose();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        // for (ConnectionData con : connectionManager.getConnections()) {
-        // System.out.println(con.getUrl());
-        // }
     }
 }

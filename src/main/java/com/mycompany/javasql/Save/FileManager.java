@@ -38,7 +38,7 @@ public class FileManager {
     }
 
     /**
-     * Save a string (using in implementations of DAO)
+     * Save a string
      * @param content content to save
      * @param append checking if is to overwrite or append
      */
