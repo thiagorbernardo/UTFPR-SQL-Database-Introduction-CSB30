@@ -47,12 +47,14 @@ public class Tela extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         DefaultMutableTreeNode top = new DefaultMutableTreeNode("The Java Series");
         DefaultMutableTreeNode bot = new DefaultMutableTreeNode("The aJava Series");
-        bot.add(top);
+        DefaultMutableTreeNode son = new DefaultMutableTreeNode("son");
+        bot.add(son);
+        top.add(bot);
         Object[] value = new Object[]{
                 top, bot
         };
         Tree tree = new Tree(connectionManager);
-        jTree1 = new javax.swing.JTree(value); // substituir com a minha classe
+        jTree1 = new javax.swing.JTree(top); // substituir com a minha classe
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
