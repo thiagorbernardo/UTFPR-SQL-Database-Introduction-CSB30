@@ -7,6 +7,11 @@ package com.mycompany.javasql;
 import com.mycompany.javasql.Components.*;
 import com.mycompany.javasql.Managers.*;
 
+import javax.swing.*;
+import javax.swing.table.*;
+import java.sql.*;
+import java.util.*;
+
 /**
  *
  * @author João Lucas
