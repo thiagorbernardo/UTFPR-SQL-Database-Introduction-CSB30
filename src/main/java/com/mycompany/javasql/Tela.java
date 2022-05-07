@@ -6,9 +6,13 @@ package com.mycompany.javasql;
 
 import com.mycompany.javasql.Components.*;
 import com.mycompany.javasql.Managers.*;
+import com.mycompany.javasql.Save.Export;
+import com.mycompany.javasql.Save.ResultMap;
 
 import javax.swing.*;
 import javax.swing.table.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.*;
 
@@ -20,8 +24,10 @@ public class Tela extends javax.swing.JFrame {
     /**
      * Creates new form Tela
      */
-    public Tela(ConnectionManager connectionManager) {
-        initComponents(connectionManager);
+    private ResultMap resultMapJSON;
+    private ResultMap resultMapCSV;
+    public Tela() {
+        initComponents();
     }
 
     /**
@@ -31,90 +37,98 @@ public class Tela extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents(ConnectionManager connectionManager) {
-        tablePane = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        sqlField = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        executeButton = new javax.swing.JButton();
-        saveJSONButton = new javax.swing.JButton();
-        saveCSVButton = new javax.swing.JButton();
-        treePane = new javax.swing.JScrollPane();
+    private void initComponents() {
+        tablePane = new JScrollPane();
+        jTable1 = new JTable();
+        sqlField = new JTextField();
+        jLabel1 = new JLabel();
+        executeButton = new JButton();
+        saveJSONButton = new JButton();
+        saveCSVButton = new JButton();
+        treePane = new JScrollPane();
 
         /* ------------------------------- JTree ---------------------------------- */
         /* Populating JTree */
         TreeMapper tree = new TreeMapper();
-        javax.swing.JTree jTree1 = new javax.swing.JTree(tree.getRootNode());
+        JTree jTree1 = new JTree(tree.getRootNode());
         jTree1.setRootVisible(false);
 
         /* Add to scroll pane */
         treePane.add(jTree1);
         treePane.setViewportView(jTree1);
 
-        /* ------------------------------- JButton ---------------------------------- */
-        saveJSONButton.setText("Save JSON");
-        saveCSVButton.setText("Save CSV");
-        executeButton.setText("Execute");
-        executeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+        sqlField.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
             }
         });
 
         /* ------------------------------- JLabel ---------------------------------- */
         jLabel1.setText("Select Query");
 
-        /* ------------------------------- JTextField ---------------------------------- */
-        sqlField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+        executeButton.setText("Execute");
+        executeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        saveJSONButton.setText("Save JSON");
+        saveJSONButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        saveCSVButton.setText("Save CSV");
+        saveCSVButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(treePane, javax.swing.GroupLayout.PREFERRED_SIZE, 356, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(treePane, GroupLayout.PREFERRED_SIZE, 356, GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(jLabel1)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(sqlField, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(tablePane, javax.swing.GroupLayout.PREFERRED_SIZE, 413, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(sqlField, GroupLayout.PREFERRED_SIZE, 308, GroupLayout.PREFERRED_SIZE))
+                        .addComponent(tablePane, GroupLayout.PREFERRED_SIZE, 413, GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(136, 136, 136)
                         .addComponent(executeButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(saveJSONButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(saveCSVButton)))
                 .addContainerGap(204, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(6, 6, 6)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                     .addComponent(treePane)
-                    .addComponent(tablePane, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(treePane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tablePane, GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(treePane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(tablePane, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(tablePane, GroupLayout.PREFERRED_SIZE, 282, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(sqlField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(sqlField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                             .addComponent(executeButton)
                             .addComponent(saveJSONButton)
                             .addComponent(saveCSVButton))))
@@ -147,13 +161,21 @@ public class Tela extends javax.swing.JFrame {
                 header.add(rsmd.getColumnName(i));
 
             }
+            resultMapJSON = new ResultMap();
+            resultMapCSV = new ResultMap();
             while(rs.next()) {
+                Map<String, Object> itemJSON = new HashMap<>();
+                ArrayList<Object> itemCSV = new ArrayList<>();
                 ArrayList<Object> linha = new ArrayList<>();
                 for (int i = 1; i <= columnQuantity; i++ ) {
 
                     linha.add(rs.getString(i));
+                    itemJSON.put(rsmd.getColumnName(i), rs.getObject(i));
+                    itemCSV.add(rs.getObject(i));
 
                 }
+                resultMapJSON.addJSONItem(itemJSON);
+                resultMapCSV.addCSVItem(itemCSV);
                 teste.add(linha);
             }
             String column[] = new String[header.size()];
@@ -183,6 +205,46 @@ public class Tela extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
+
+        Export test = new Export(System.currentTimeMillis() + "");
+        test.saveJSON(resultMapJSON);
+//        ConnectionManager connectionManager = new ConnectionManager();
+//        ConnectionData conData = connectionManager.getConnections().get(0);
+//
+//        try {
+//            connectionManager.useConnection(conData);
+//            Connection connection = connectionManager.getConnection();
+//            Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+//            ResultSet rs = st.executeQuery(query);
+//            Export test = new Export(System.currentTimeMillis() + ".json");
+//            ResultMap resultMap = new ResultMap();
+//
+//            while (rs.next()) {
+//                Map<String, Object> item = new HashMap<>();
+//
+//                ResultSetMetaData rsmd = rs.getMetaData();
+//
+//                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+//                    item.put(rsmd.getColumnName(i), rs.getObject(i));
+//                }
+//
+//                resultMap.addItem(item);
+//            }
+//            test.save(resultMap);
+//
+//        } catch (SQLException e) {
+//            System.out.println("Error2");
+//        }
+    }
+    
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
+        Export test = new Export(System.currentTimeMillis() + "");
+        test.saveCSV(resultMapCSV);
+        System.out.println("teste23141");
+//        dispose();
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -211,6 +273,7 @@ public class Tela extends javax.swing.JFrame {
         //</editor-fold>
         Start start = new Start();
         start.begin();
+
 
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -62,7 +62,7 @@ public class Start {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Tela(connectionManager).setVisible(true);
+                new Tela().setVisible(true);
             }
         });
 
