@@ -7,6 +7,11 @@ package com.mycompany.javasql;
 import com.mycompany.javasql.Components.*;
 import com.mycompany.javasql.Managers.*;
 
+import javax.swing.*;
+import javax.swing.table.*;
+import java.sql.*;
+import java.util.*;
+
 /**
  *
  * @author João Lucas
@@ -27,11 +32,11 @@ public class Tela extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents(ConnectionManager connectionManager) {
-        jScrollPane1 = new javax.swing.JScrollPane();
+        tablePane = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jTextField1 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        executeButton = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         treePane = new javax.swing.JScrollPane();
@@ -48,18 +53,7 @@ public class Tela extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+//        jScrollPane1.setViewportView(jTable1);
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -69,8 +63,8 @@ public class Tela extends javax.swing.JFrame {
 
         jLabel1.setText("Select Query");
 
-        jButton1.setText("Execute");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        executeButton.setText("Execute");
+        executeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
@@ -95,10 +89,10 @@ public class Tela extends javax.swing.JFrame {
                             .addComponent(jLabel1)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 413, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(tablePane, javax.swing.GroupLayout.PREFERRED_SIZE, 413, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(136, 136, 136)
-                        .addComponent(jButton1)
+                        .addComponent(executeButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -111,17 +105,22 @@ public class Tela extends javax.swing.JFrame {
                 .addGap(6, 6, 6)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(treePane)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE))
+                    .addComponent(tablePane, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
-                .addContainerGap(177, Short.MAX_VALUE))
+                    .addComponent(treePane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(tablePane, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(executeButton)
+                            .addComponent(jButton2)
+                            .addComponent(jButton3))))
+                .addContainerGap(117, Short.MAX_VALUE))
         );
 
         pack();
@@ -132,7 +131,58 @@ public class Tela extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        ConnectionManager connectionManager = new ConnectionManager();
+        ConnectionData conData = connectionManager.getConnections().get(0);
+
+        try {
+            connectionManager.useConnection(conData);
+            Connection connection = connectionManager.getConnection();
+            Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            ResultSet rs = st.executeQuery(jTextField1.getText());
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int columnQuantity = rsmd.getColumnCount();
+            ArrayList<ArrayList<Object>> teste = new ArrayList<>();
+            ArrayList<Object> header = new ArrayList<>();
+
+            for (int i = 1; i <= columnQuantity; i++ ) {
+
+                header.add(rsmd.getColumnName(i));
+
+            }
+            while(rs.next()) {
+                ArrayList<Object> linha = new ArrayList<>();
+                for (int i = 1; i <= columnQuantity; i++ ) {
+
+                    linha.add(rs.getString(i));
+
+                }
+                teste.add(linha);
+            }
+            String column[] = new String[header.size()];
+            String data[][] = new String[teste.size()][header.size()];
+
+            for(int i = 0; i < teste.size(); i++){
+                for(int j = 0; j < header.size(); j++){
+                    column[j] = header.get(j).toString();
+                    Object item = teste.get(i).get(j);
+                    if(item == null){
+                        data[i][j] = "null";
+                    }else {
+                        data[i][j] = item.toString();
+                    }
+                }
+            }
+
+            DefaultTableModel model = new DefaultTableModel(data, column);
+            JTable table = new JTable(model);
+            table.setShowGrid(true);
+            table.setShowVerticalLines(true);
+            tablePane.add(table);
+            tablePane.setViewportView(table);
+        }catch  (SQLException e) {
+            System.out.println("Error");
+        }
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -163,15 +213,14 @@ public class Tela extends javax.swing.JFrame {
         //</editor-fold>
         Start start = new Start();
         start.begin();
-        /* Create and display the form */
 
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton executeButton;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane tablePane;
     private javax.swing.JScrollPane treePane;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;

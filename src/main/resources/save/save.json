@@ -1,0 +1,12 @@
+{
+  "createdAt": 1651874644675,
+  "updatedAt": 1651874644920,
+  "connections": [
+    {
+      "id": "d55b23df-a71c-4dbf-b0a2-c3d1f7159d16",
+      "url": "jdbc:mysql://localhost/university",
+      "user": "root",
+      "password": "jjJJ@12345"
+    }
+  ]
+}
