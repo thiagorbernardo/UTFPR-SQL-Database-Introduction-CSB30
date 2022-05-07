@@ -13,7 +13,18 @@ public class ColumnMetaData {
         this.isPrimaryKey = isPrimaryKey;
     }
 
-    public String getName(){
-        return  this.name;
+    public String getFormattedName(){
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(this.name).append("  ");
+
+        if(this.isPrimaryKey){
+            builder.append("PRIMARY_KEY  ");
+        }
+
+        return builder.
+                append(this.type).
+                append("(").append(this.size).append(")")
+                .toString();
     }
 }

@@ -4,15 +4,8 @@
  */
 package com.mycompany.javasql;
 
-import com.mycompany.javasql.Components.Tree;
-import com.mycompany.javasql.Managers.ConnectionData;
-import com.mycompany.javasql.Managers.ConnectionManager;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.tree.DefaultMutableTreeNode;
-import java.sql.*;
-import java.util.ArrayList;
+import com.mycompany.javasql.Components.*;
+import com.mycompany.javasql.Managers.*;
 
 /**
  *
@@ -41,17 +34,18 @@ public class Tela extends javax.swing.JFrame {
         executeButton = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        DefaultMutableTreeNode top = new DefaultMutableTreeNode("The Java Series");
-        DefaultMutableTreeNode bot = new DefaultMutableTreeNode("The aJava Series");
-        DefaultMutableTreeNode son = new DefaultMutableTreeNode("son");
-        bot.add(son);
-        top.add(bot);
-        Object[] value = new Object[]{
-                top, bot
-        };
-        Tree tree = new Tree(connectionManager);
-        jTree1 = new javax.swing.JTree(top); // substituir com a minha classe
+        treePane = new javax.swing.JScrollPane();
+
+        /* ------------------------------- JTree ---------------------------------- */
+        /* Populating JTree */
+        TreeMapper tree = new TreeMapper();
+        javax.swing.JTree jTree1 = new javax.swing.JTree(tree.getRootNode());
+        jTree1.setRootVisible(false);
+
+        /* Add to scroll pane */
+        treePane.add(jTree1);
+        treePane.setViewportView(jTree1);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
 //        jScrollPane1.setViewportView(jTable1);
@@ -74,11 +68,7 @@ public class Tela extends javax.swing.JFrame {
         jButton2.setText("Save JSON");
 
         jButton3.setText("Save CSV");
-//        Tree tree1 = new Tree();
-//        jTree1 = new JTree(tree1.getTop());
-//        jTree1.setModel(new Tree());
-        jScrollPane2.add(jTree1);
-        jScrollPane2.setViewportView(jTree1);
+        
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -86,7 +76,7 @@ public class Tela extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(treePane, javax.swing.GroupLayout.PREFERRED_SIZE, 356, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -102,14 +92,18 @@ public class Tela extends javax.swing.JFrame {
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton3)))
-                .addContainerGap(446, Short.MAX_VALUE))
+                .addContainerGap(204, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(6, 6, 6)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(treePane)
+                    .addComponent(tablePane, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(treePane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(tablePane, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -222,9 +216,8 @@ public class Tela extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane tablePane;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane treePane;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTree jTree1;
     // End of variables declaration//GEN-END:variables
 }
