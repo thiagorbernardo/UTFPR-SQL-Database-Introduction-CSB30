@@ -54,7 +54,6 @@ public class  ConnectionManager {
                         tables.getString("TABLE_NAME"),
                         tables.getString("TABLE_TYPE")
                 );
-//                if (table.isTable()) {
                     ResultSet primaryKeys = this.databaseMetaData.getPrimaryKeys(catalogName, table.getType().toString(), table.getName());
 
                     while (primaryKeys.next()) {
@@ -70,7 +69,6 @@ public class  ConnectionManager {
                                 columns.getInt("COLUMN_SIZE")
                         );
                     }
-//                }
                 schemas.add(table);
             }
             result.add(new CatalogMetaData(catalogName, schemas));

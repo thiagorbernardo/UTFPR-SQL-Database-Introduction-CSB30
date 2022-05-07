@@ -1,21 +1,33 @@
 package com.mycompany.javasql.Save;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ResultMap {
-    private ArrayList<Map<String, Object>> data;
+    private ArrayList<Map<String, Object>> dataJSON;
+    private ArrayList<ArrayList<Object>> dataCSV;
 
     public ResultMap() {
-        this.data = new ArrayList<>();
+        this.dataJSON = new ArrayList<>();
+        this.dataCSV = new ArrayList<>();
     }
 
-    public void addItem(Map<String, Object> item) {
-        this.data.add(item);
+    public void addJSONItem(Map<String, Object> item) {
+        this.dataJSON.add(item);
     }
 
-    public ArrayList<Map<String, Object>> getData() {
-        return this.data;
+    public void addCSVHeader(ArrayList<Object> item) {
+        this.dataCSV.add(item);
+    }
+
+    public void addCSVItem(ArrayList<Object> item) {
+        this.dataCSV.add(item);
+    }
+
+    public ArrayList<Map<String, Object>> getJSON() {
+        return this.dataJSON;
+    }
+
+    public ArrayList<ArrayList<Object>> getCSV() {
+        return this.dataCSV;
     }
 }
