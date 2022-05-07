@@ -40,8 +40,6 @@ public class ExportJSON {
     }
 
     public void save(ResultMap result) {
-        String json = this.gson.toJson(result.getData());
-        System.out.println(json);
         this.fileManager.saveString(this.gson.toJson(result.getData()), false);
     }
 }

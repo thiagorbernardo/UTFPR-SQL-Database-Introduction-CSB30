@@ -43,9 +43,9 @@ public class Start {
 
                 resultMap.addItem(item);
             }
-            test.save(resultMap);
+//            test.save(resultMap);
 
-            connectionManager.getTables();
+//            connectionManager.getTables();
 //            connectionManager.dispose();
         } catch (SQLException e) {
             throw new RuntimeException(e);

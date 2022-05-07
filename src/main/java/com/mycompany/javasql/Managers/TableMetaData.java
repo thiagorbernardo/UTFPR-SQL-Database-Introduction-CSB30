@@ -7,14 +7,12 @@ enum TableType {
 }
 
 public class TableMetaData {
-    String catalog;
-    String name;
-    TableType type;
-    ArrayList<String> primaryKeys;
-    ArrayList<ColumnMetaData> columns;
+    private String name;
+    private TableType type;
+    private ArrayList<String> primaryKeys;
+    private ArrayList<ColumnMetaData> columns;
 
-    public TableMetaData(String catalog, String name, String type) {
-        this.catalog = catalog;
+    public TableMetaData(String name, String type) {
         this.name = name;
         this.type = TableType.valueOf(type);
         this.primaryKeys = new ArrayList<>();
@@ -31,7 +29,6 @@ public class TableMetaData {
     }
 
     public void selfPrint() {
-        System.out.println("Table catalog: " + this.catalog);
         System.out.println("Table name: " + this.name);
         System.out.println("Table type: " + this.type);
         StringBuilder columns = new StringBuilder("Columns:");
@@ -45,15 +42,19 @@ public class TableMetaData {
         System.out.println();
     }
 
-    public String getCatalog(){
-        return this.catalog;
-    }
-
     public String getName(){
         return this.name;
     }
 
+    public TableType getType(){
+        return this.type;
+    }
+
     public ArrayList<ColumnMetaData> getColumns(){
         return columns;
+    }
+
+    public boolean isTable(){
+        return this.type == TableType.TABLE;
     }
 }

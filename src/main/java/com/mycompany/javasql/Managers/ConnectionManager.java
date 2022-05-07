@@ -5,12 +5,11 @@ import com.mycompany.javasql.Save.*;
 import java.sql.*;
 import java.util.*;
 
-public class ConnectionManager {
+public class  ConnectionManager {
     private final SaveJSON saveJson = new SaveJSON("src/main/resources/save/save.json");
     private final Save save;
     private Connection connection;
     private DatabaseMetaData databaseMetaData;
-    private int tablenumber = 0;
 
     public ConnectionManager() {
         this.save = this.saveJson.read();
@@ -41,38 +40,40 @@ public class ConnectionManager {
         return this.connection;
     }
 
-    public ArrayList<TableMetaData> getTables() throws SQLException {
+    public ArrayList<CatalogMetaData> getCatalogs() throws SQLException {
         String[] types = {"TABLE", "VIEW"};
-        ResultSet tables = this.databaseMetaData.getTables(this.connection.getCatalog(), null, "%", types);
-        ArrayList<TableMetaData> result = new ArrayList<>();
 
-        while (tables.next()) {
-            tablenumber++;
-            TableMetaData table = new TableMetaData(
-                    tables.getString("TABLE_CAT"),
-                    tables.getString("TABLE_NAME"),
-                    tables.getString("TABLE_TYPE")
-            );
-            if (table.type != TableType.VIEW) {
-                ResultSet primaryKeys = this.databaseMetaData.getPrimaryKeys(table.catalog, table.type.toString(), table.name);
+        ArrayList<CatalogMetaData> result = new ArrayList<>();
+        ResultSet catalogs = this.databaseMetaData.getCatalogs();
+        while(catalogs.next()){
+            ArrayList<TableMetaData> schemas = new ArrayList<>();
+            String catalogName = catalogs.getString(1);
+            ResultSet tables = this.databaseMetaData.getTables(catalogName, null, "%", types);
+            while (tables.next()) {
+                TableMetaData table = new TableMetaData(
+                        tables.getString("TABLE_NAME"),
+                        tables.getString("TABLE_TYPE")
+                );
+//                if (table.isTable()) {
+                    ResultSet primaryKeys = this.databaseMetaData.getPrimaryKeys(catalogName, table.getType().toString(), table.getName());
 
-                while (primaryKeys.next()) {
-                    table.addPrimaryKey(primaryKeys.getString("COLUMN_NAME"));
-                }
+                    while (primaryKeys.next()) {
+                        table.addPrimaryKey(primaryKeys.getString("COLUMN_NAME"));
+                    }
 
-                ResultSet columns = this.databaseMetaData.getColumns(table.catalog, null, table.name, "%");
+                    ResultSet columns = this.databaseMetaData.getColumns(catalogName, null, table.getName(), "%");
 
-                while (columns.next()) {
-                    table.addColumn(
-                            columns.getString("COLUMN_NAME"),
-                            columns.getString("TYPE_NAME"),
-                            columns.getInt("COLUMN_SIZE")
-                    );
-                }
+                    while (columns.next()) {
+                        table.addColumn(
+                                columns.getString("COLUMN_NAME"),
+                                columns.getString("TYPE_NAME"),
+                                columns.getInt("COLUMN_SIZE")
+                        );
+                    }
+//                }
+                schemas.add(table);
             }
-
-            table.selfPrint();
-            result.add(table);
+            result.add(new CatalogMetaData(catalogName, schemas));
         }
 
         return result;
@@ -82,7 +83,4 @@ public class ConnectionManager {
         this.connection.close();
     }
 
-    public int getTablenumber(){
-        return tablenumber/2;
-    }
 }
