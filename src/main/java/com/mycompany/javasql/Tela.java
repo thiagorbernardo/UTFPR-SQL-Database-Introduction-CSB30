@@ -26,7 +26,12 @@ public class Tela extends javax.swing.JFrame {
      */
     private ResultMap resultMapJSON;
     private ResultMap resultMapCSV;
-    public Tela() {
+    private ConnectionManager connectionManager;
+    private int connectionNumber;
+
+    public Tela(ConnectionManager connectionManager, int connectionNumber) {
+        this.connectionNumber = connectionNumber;
+        this.connectionManager = connectionManager;
         initComponents();
     }
 
@@ -143,8 +148,8 @@ public class Tela extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        ConnectionManager connectionManager = new ConnectionManager();
-        ConnectionData conData = connectionManager.getConnections().get(0);
+//        ConnectionManager connectionManager = new ConnectionManager();
+        ConnectionData conData = connectionManager.getConnections().get(connectionNumber);
 
         try {
             connectionManager.useConnection(conData);
@@ -208,7 +213,11 @@ public class Tela extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
 
         Export test = new Export(System.currentTimeMillis() + "");
-        test.saveJSON(resultMapJSON);
+        try {
+            test.saveJSON(resultMapJSON);
+        }catch(NullPointerException e){
+        System.out.println("Execute uma query");
+    }
 //        ConnectionManager connectionManager = new ConnectionManager();
 //        ConnectionData conData = connectionManager.getConnections().get(0);
 //
@@ -240,15 +249,17 @@ public class Tela extends javax.swing.JFrame {
     
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
         Export test = new Export(System.currentTimeMillis() + "");
-        test.saveCSV(resultMapCSV);
-        System.out.println("teste23141");
+        try {
+            test.saveCSV(resultMapCSV);
+
+        }catch(NullPointerException e){
+            System.out.println("Execute uma query");
+        }
 //        dispose();
     }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
+
+    public void abrir() {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -271,9 +282,13 @@ public class Tela extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Tela.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        Start start = new Start();
-        start.begin();
-
+//        Start start = new Start();
+//        start.begin();
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Tela(connectionManager, connectionNumber).setVisible(true);
+            }
+        });
 
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
