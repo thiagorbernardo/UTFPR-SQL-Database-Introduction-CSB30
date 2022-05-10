@@ -15,9 +15,9 @@ import java.util.ArrayList;
  * @author João Lucas
  */
 public class TelaInicio extends javax.swing.JFrame {
-    private ConnectionManager connectionManager;
+    private final ConnectionManager connectionManager;
     private ArrayList<ConnectionData> connections;
-    private javax.swing.DefaultComboBoxModel<String> comboBoxModel;
+    private final javax.swing.DefaultComboBoxModel<String> comboBoxModel;
     /**
      * Creates new form TelaInicio
      */
