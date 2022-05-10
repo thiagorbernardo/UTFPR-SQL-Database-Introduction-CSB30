@@ -7,26 +7,11 @@ import java.sql.*;
 import java.util.*;
 
 public class TreeMapper {
-    private ConnectionManager connectionManager;
     private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("ROOT NODE");
 
-    public TreeMapper() {
-        this.connectionManager = new ConnectionManager();
+    public TreeMapper(ConnectionManager connectionManager) {
         try {
-            ArrayList<ConnectionData> connections = connectionManager.getConnections();
-
-            if (connections.isEmpty()) {
-                connectionManager.newConnection(new ConnectionData(
-                        "jdbc:mysql://localhost/university",
-                        "root",
-                        "jjJJ@12345")
-                );
-            }
-
-            ConnectionData conData = connectionManager.getConnections().get(0);
-            connectionManager.useConnection(conData);
-
-            ArrayList<CatalogMetaData> catalogs = this.connectionManager.getCatalogs();
+            ArrayList<CatalogMetaData> catalogs = connectionManager.getCatalogs();
             for (CatalogMetaData catalog : catalogs) {
                 // ex: university, livrosdb, employees
                 DefaultMutableTreeNode schemaNode = new DefaultMutableTreeNode(catalog.getName());

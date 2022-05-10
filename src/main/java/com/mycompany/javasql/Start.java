@@ -60,11 +60,7 @@ public class Start {
             throw new RuntimeException(e);
         }
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Tela(connectionManager).setVisible(true);
-            }
-        });
+
 
         // for (ConnectionData con : connectionManager.getConnections()) {
         // System.out.println(con.getUrl());
