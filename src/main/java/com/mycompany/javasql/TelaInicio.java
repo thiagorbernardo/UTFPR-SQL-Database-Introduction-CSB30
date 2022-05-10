@@ -17,20 +17,19 @@ import java.util.ArrayList;
 public class TelaInicio extends javax.swing.JFrame {
     private ConnectionManager connectionManager;
     private ArrayList<ConnectionData> connections;
-    private DefaultComboBoxModel comboBoxModel;
+    private javax.swing.DefaultComboBoxModel<String> comboBoxModel;
     /**
      * Creates new form TelaInicio
      */
     public TelaInicio() {
         this.connectionManager = new ConnectionManager();
         this.connections = connectionManager.getConnections();
-         comboBoxModel = new DefaultComboBoxModel();
+        this.comboBoxModel = new javax.swing.DefaultComboBoxModel<>();
 
-        for(int i = 0; i < connections.size(); i++){
-            comboBoxModel.addElement(connections.get(i).getUrl());
+        for (ConnectionData connection : connections) {
+            comboBoxModel.addElement(connection.getUrl());
         }
         initComponents();
-
     }
 
     /**
@@ -131,32 +130,26 @@ public class TelaInicio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void createButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createButtonActionPerformed
+        this.connectionManager.newConnection(new ConnectionData(
+                jTextField1.getText(),
+                jTextField2.getText(),
+                jTextField3.getText()));
 
-
-
-            connectionManager.newConnection(new ConnectionData(
-                    jTextField1.getText(),
-                    jTextField2.getText(),
-                    jTextField3.getText()));
-
-
-
-
-        Tela tela = new Tela(connectionManager, connections.size()-1);
-        tela.abrir();
-        dispose();
+        Tela tela = new Tela(this.connectionManager);
+        tela.run();
+        this.dispose();
     }//GEN-LAST:event_createButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
         try {
-            connectionManager.useConnection(new ConnectionData(
+            this.connectionManager.useConnection(new ConnectionData(
                     connections.get(jComboBox1.getSelectedIndex()).getUrl(),
                     connections.get(jComboBox1.getSelectedIndex()).getUser(),
                     connections.get(jComboBox1.getSelectedIndex()).getPassword()));
-            Tela tela = new Tela(connectionManager, jComboBox1.getSelectedIndex());
-            tela.abrir();
-            dispose();
+
+            Tela tela = new Tela(this.connectionManager);
+            tela.run();
+            this.dispose();
         }catch(Exception e){
 
         }
