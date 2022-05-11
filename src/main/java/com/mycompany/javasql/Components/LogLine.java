@@ -3,10 +3,6 @@ package com.mycompany.javasql.Components;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-enum Status {
-    SUCCESS, ERROR
-}
-
 public class LogLine {
     private final int id;
     private final LocalDate time;

@@ -24,6 +24,7 @@ public class Tela extends javax.swing.JFrame {
      */
     private ResultMap resultMap = new ResultMap();
     private final ConnectionManager connectionManager;
+    private ArrayList<LogLine> logData = new ArrayList<>();
 
     public Tela(ConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
@@ -31,6 +32,7 @@ public class Tela extends javax.swing.JFrame {
 
         /* ------------------------------- JTree ---------------------------------- */
         this.updateTree();
+
     }
 
     private void updateTree() {
@@ -59,6 +61,7 @@ public class Tela extends javax.swing.JFrame {
         csvButton = new javax.swing.JButton();
         treePane = new javax.swing.JScrollPane();
         log = new javax.swing.JScrollPane();
+        tableLog = new javax.swing.JTable();
         tablePane = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -87,46 +90,68 @@ public class Tela extends javax.swing.JFrame {
             }
         });
 
+        log.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+
+        tableLog.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[][]{
+                        {null, null, null, null, null},
+                        {null, null, null, null, null},
+                        {null, null, null, null, null},
+                        {null, null, null, null, null}
+                },
+                new String[]{
+                        "#", "Time", "Status", "Query", "Message"
+                }
+        ) {
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return false;
+            }
+        });
+        tableLog.setToolTipText("");
+        log.setViewportView(tableLog);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(treePane, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE)
-                    .addComponent(log))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(sqlField, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
-                    .addComponent(tablePane))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(455, Short.MAX_VALUE)
-                .addComponent(executeButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jsonButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(csvButton)
-                .addGap(283, 283, 283))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addComponent(treePane, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(18, 18, 18)
+                                                                .addComponent(sqlField, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addComponent(tablePane, javax.swing.GroupLayout.PREFERRED_SIZE, 940, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(jsonButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(executeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(csvButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                        .addComponent(log, javax.swing.GroupLayout.PREFERRED_SIZE, 940, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap(34, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(treePane, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
-                    .addComponent(tablePane))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(log)
-                    .addComponent(sqlField, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(executeButton)
-                    .addComponent(jsonButton)
-                    .addComponent(csvButton))
-                .addGap(24, 24, 24))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(treePane)
+                                        .addComponent(sqlField, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGap(48, 48, 48)
+                                                .addComponent(executeButton)
+                                                .addGap(33, 33, 33)
+                                                .addComponent(jsonButton)
+                                                .addGap(41, 41, 41)
+                                                .addComponent(csvButton)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tablePane, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(log, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(14, 14, 14))
         );
 
         pack();
@@ -142,13 +167,14 @@ public class Tela extends javax.swing.JFrame {
             Pattern createPattern = Pattern.compile("(CREATE|ALTER|DROP)", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
 
             String sqlText = this.sqlField.getText();
-            if(updatePattern.matcher(sqlText).find()){
+
+            if (updatePattern.matcher(sqlText).find()) {
                 st.executeUpdate(sqlText);
                 // TODO: this.logData.add(new LogLine(this.logData.size()+1, Status.SUCCESS, sqlText, "Updated"));
                 return;
             }
 
-            if(!selectPattern.matcher(sqlText).find()){
+            if (!selectPattern.matcher(sqlText).find()) {
                 st.execute(sqlText);
                 // TODO: this.logData.add(new LogLine(this.logData.size()+1, Status.SUCCESS, sqlText, "Executed"));
                 if(createPattern.matcher(sqlText).find()) {
@@ -262,6 +288,7 @@ public class Tela extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
             System.out.println(e.toString());
         }
+
     }
 
 
@@ -302,6 +329,7 @@ public class Tela extends javax.swing.JFrame {
     private javax.swing.JButton jsonButton;
     private javax.swing.JScrollPane log;
     private javax.swing.JTextField sqlField;
+    private javax.swing.JTable tableLog;
     private javax.swing.JScrollPane tablePane;
     private javax.swing.JScrollPane treePane;
     // End of variables declaration//GEN-END:variables
