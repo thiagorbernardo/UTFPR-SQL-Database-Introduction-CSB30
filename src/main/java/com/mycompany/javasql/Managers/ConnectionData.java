@@ -10,24 +10,25 @@ public class ConnectionData {
 
     public ConnectionData(String url, String user, String password) {
         this.id = UUID.randomUUID().toString();
-        this.url = url;
+        this.url = "jdbc:"+url;
         this.user = user;
         this.password = password;
     }
 
     public String getUser() {
-        return user;
+        return this.user;
     }
 
     public String getUrl() {
-        return url;
+        return this.url;
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
-    public String getId() {
-        return id;
+    @Override
+    public String toString() {
+        return this.url.replace("jdbc:", "");
     }
 }

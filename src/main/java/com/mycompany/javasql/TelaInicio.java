@@ -16,19 +16,22 @@ import java.util.ArrayList;
  */
 public class TelaInicio extends javax.swing.JFrame {
     private final ConnectionManager connectionManager;
-    private ArrayList<ConnectionData> connections;
-    private final javax.swing.DefaultComboBoxModel<String> comboBoxModel;
+    private final ArrayList<ConnectionData> connections;
+    private final DefaultComboBoxModel<ConnectionData> comboBoxModel = new javax.swing.DefaultComboBoxModel<>();
     /**
      * Creates new form TelaInicio
      */
     public TelaInicio() {
         this.connectionManager = new ConnectionManager();
         this.connections = connectionManager.getConnections();
-        this.comboBoxModel = new javax.swing.DefaultComboBoxModel<>();
+        this.jComboBox1 = new javax.swing.JComboBox<>();
 
         for (ConnectionData connection : connections) {
-            comboBoxModel.addElement(connection.getUrl());
+            System.out.println(connection.toString());
+            this.jComboBox1.addItem(connection);
+            comboBoxModel.addElement(connection);
         }
+        this.jComboBox1.setModel(comboBoxModel);
         initComponents();
     }
 
@@ -60,7 +63,7 @@ public class TelaInicio extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setModel(comboBoxModel);
+        jComboBox1.setModel(this.comboBoxModel);
 
         jLabel1.setText("URL:");
 
@@ -90,14 +93,12 @@ public class TelaInicio extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(191, 191, 191)))
-                .addGap(55, 55, 55))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
+                    .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
+                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(55, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -146,10 +147,7 @@ public class TelaInicio extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            this.connectionManager.useConnection(new ConnectionData(
-                    connections.get(jComboBox1.getSelectedIndex()).getUrl(),
-                    connections.get(jComboBox1.getSelectedIndex()).getUser(),
-                    connections.get(jComboBox1.getSelectedIndex()).getPassword()));
+            this.connectionManager.useConnection(this.connections.get(jComboBox1.getSelectedIndex()));
 
             Tela tela = new Tela(this.connectionManager);
             tela.run();
@@ -199,7 +197,7 @@ public class TelaInicio extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton createButton;
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<ConnectionData> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
