@@ -15,6 +15,7 @@ import java.sql.*;
 import java.util.*;
 import java.util.regex.*;
 
+
 /**
  * @author João Lucas
  */
@@ -83,7 +84,6 @@ public class Tela extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        sqlField = new javax.swing.JTextField();
         executeButton = new javax.swing.JButton();
         jsonButton = new javax.swing.JButton();
         csvButton = new javax.swing.JButton();
@@ -91,11 +91,12 @@ public class Tela extends javax.swing.JFrame {
         log = new javax.swing.JScrollPane();
         tableLog = new javax.swing.JTable();
         tablePane = new javax.swing.JScrollPane();
+        sqlPane = new javax.swing.JScrollPane();
+        sqlField = new javax.swing.JTextArea();
+        jLabel1 = new javax.swing.JLabel();
+        limitField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        sqlField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        sqlField.setToolTipText("Query");
 
         executeButton.setText("Execute");
         executeButton.addActionListener(new java.awt.event.ActionListener() {
@@ -121,65 +122,84 @@ public class Tela extends javax.swing.JFrame {
         log.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 
         tableLog.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
-                        {null, null, null, null, null},
-                        {null, null, null, null, null},
-                        {null, null, null, null, null},
-                        {null, null, null, null, null}
-                },
-                new String[]{
-                        "#", "Time", "Status", "Query", "Message"
-                }
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "#", "Time", "Status", "Query", "Message"
+            }
         ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return false;
+                return canEdit [columnIndex];
             }
         });
         tableLog.setToolTipText("");
         log.setViewportView(tableLog);
 
+        sqlField.setColumns(20);
+        sqlField.setRows(5);
+        sqlPane.setViewportView(sqlField);
+
+        jLabel1.setText("Número de itens:");
+
+        limitField.setText("10000");
+        limitField.setToolTipText("");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addGroup(layout.createSequentialGroup()
-                                                                .addComponent(treePane, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addGap(18, 18, 18)
-                                                                .addComponent(sqlField, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addComponent(tablePane, javax.swing.GroupLayout.PREFERRED_SIZE, 940, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                        .addComponent(jsonButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(executeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(csvButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                        .addComponent(log, javax.swing.GroupLayout.PREFERRED_SIZE, 940, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addContainerGap(34, Short.MAX_VALUE))
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(treePane, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(sqlPane))
+                            .addComponent(tablePane, javax.swing.GroupLayout.PREFERRED_SIZE, 940, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jsonButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(executeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(csvButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(limitField)))
+                    .addComponent(log, javax.swing.GroupLayout.PREFERRED_SIZE, 940, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(treePane, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(treePane)
-                                        .addComponent(sqlField, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addGap(48, 48, 48)
-                                                .addComponent(executeButton)
-                                                .addGap(33, 33, 33)
-                                                .addComponent(jsonButton)
-                                                .addGap(41, 41, 41)
-                                                .addComponent(csvButton)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tablePane, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(log, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(14, 14, 14))
+                            .addGap(11, 11, 11)
+                            .addComponent(executeButton)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jLabel1)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(limitField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(20, 20, 20)
+                            .addComponent(jsonButton)
+                            .addGap(41, 41, 41)
+                            .addComponent(csvButton)))
+                    .addComponent(sqlPane, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tablePane, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(log, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(14, 14, 14))
         );
 
         pack();
@@ -197,6 +217,7 @@ public class Tela extends javax.swing.JFrame {
 
             long startedTime = System.currentTimeMillis();
             long endedTime;
+
             if (updatePattern.matcher(sqlText).find()) {
                 int rowsAffected = st.executeUpdate(sqlText);
                 endedTime = System.currentTimeMillis();
@@ -228,83 +249,99 @@ public class Tela extends javax.swing.JFrame {
                 }
                 return;
             }
+            if (isInt(limitField.getText())) {
+                // Executing query
+                ResultSet rs = st.executeQuery(sqlText);
+                endedTime = System.currentTimeMillis();
 
-            // Executing query
-            ResultSet rs = st.executeQuery(sqlText);
-            endedTime = System.currentTimeMillis();
+                // Getting result set metadata
+                ResultSetMetaData rsMetadata = rs.getMetaData();
+                int columnQuantity = rsMetadata.getColumnCount();
+                // Creating header and data from result set
+                ArrayList<ArrayList<Object>> result = new ArrayList<>();
+                ArrayList<Object> header = new ArrayList<>();
 
-            // Getting result set metadata
-            ResultSetMetaData rsMetadata = rs.getMetaData();
-            int columnQuantity = rsMetadata.getColumnCount();
-            // Creating header and data from result set
-            ArrayList<ArrayList<Object>> result = new ArrayList<>();
-            ArrayList<Object> header = new ArrayList<>();
-
-            // Populating header
-            for (int i = 1; i <= columnQuantity; i++) {
-                header.add(rsMetadata.getColumnName(i));
-            }
-
-            // Create result map to future save
-            this.resultMap = new ResultMap();
-            this.resultMap.addCSVHeader(header);
-
-            while (rs.next()) {
-                Map<String, Object> itemJSON = new HashMap<>();
-                ArrayList<Object> itemCSV = new ArrayList<>();
-                ArrayList<Object> line = new ArrayList<>();
+                // Populating header
                 for (int i = 1; i <= columnQuantity; i++) {
-                    line.add(rs.getString(i));
-                    itemJSON.put(rsMetadata.getColumnName(i), rs.getObject(i));
-                    itemCSV.add(rs.getObject(i));
+                    header.add(rsMetadata.getColumnName(i));
                 }
-                this.resultMap.addJSONItem(itemJSON);
-                this.resultMap.addCSVItem(itemCSV);
-                result.add(line);
-            }
 
-            // Add to logs
-            this.logData.add(
-                    new LogLine(
-                            this.logData.size() + 1,
-                            Status.SUCCESS,
-                            sqlText,
-                            "Returned " + result.size() + " rows in " + (endedTime - startedTime) + " ms"));
-            this.updateLogsTable();
+                // Create result map to future save
+                this.resultMap = new ResultMap();
+                this.resultMap.addCSVHeader(header);
 
-            // Vectors to add on table
-            String[] column = new String[header.size()];
-            String[][] data = new String[result.size()][header.size()];
+                while (rs.next()) {
+                    Map<String, Object> itemJSON = new HashMap<>();
+                    ArrayList<Object> itemCSV = new ArrayList<>();
+                    ArrayList<Object> line = new ArrayList<>();
+                    for (int i = 1; i <= columnQuantity; i++) {
+                        line.add(rs.getString(i));
+                        itemJSON.put(rsMetadata.getColumnName(i), rs.getObject(i));
+                        itemCSV.add(rs.getObject(i));
+                    }
+                    this.resultMap.addJSONItem(itemJSON);
+                    this.resultMap.addCSVItem(itemCSV);
+                    result.add(line);
+                }
 
-            // Populating vectors
-            for (int i = 0; i < result.size(); i++) {
-                for (int j = 0; j < header.size(); j++) {
-                    column[j] = header.get(j).toString();
-                    Object item = result.get(i).get(j);
-                    if (item == null) {
-                        data[i][j] = "null";
-                    } else {
-                        data[i][j] = item.toString();
+                // Add to logs
+                this.logData.add(
+                        new LogLine(
+                                this.logData.size() + 1,
+                                Status.SUCCESS,
+                                sqlText,
+                                "Returned " + result.size() + " rows in " + (endedTime - startedTime) + " ms"));
+                this.updateLogsTable();
+
+
+                // Vectors to add on table
+                String[] column = new String[header.size()];
+                int limit = Integer.parseInt(limitField.getText());
+                int teste;
+                if (limit > result.size()) {
+                    teste = result.size();
+                }else{
+                    teste = limit;
+                }
+                String[][] data = new String[teste][header.size()];
+
+                // Populating vectors
+                for (int i = 0; i < teste; i++) {
+                    for (int j = 0; j < header.size(); j++) {
+                        column[j] = header.get(j).toString();
+                        Object item = result.get(i).get(j);
+                        if (item == null) {
+                            data[i][j] = "null";
+                        } else {
+                            data[i][j] = item.toString();
+                        }
+
                     }
                 }
+
+                // Creating Table
+                DefaultTableModel model = new DefaultTableModel(data, column);
+                JTable table = new JTable(model);
+                table.setShowGrid(true);
+                table.setShowVerticalLines(true);
+                tablePane.add(table);
+                tablePane.setViewportView(table);
+            } else {
+                throw new Exception("Escreva um numero no campo numero de itens");
             }
 
-            // Creating Table
-            DefaultTableModel model = new DefaultTableModel(data, column);
-            JTable table = new JTable(model);
-            table.setShowGrid(true);
-            table.setShowVerticalLines(true);
-            tablePane.add(table);
-            tablePane.setViewportView(table);
         } catch (SQLException e) {
-            this.logData.add(new LogLine(this.logData.size()+1, Status.ERROR, sqlText, e.toString()));
+            this.logData.add(new LogLine(this.logData.size() + 1, Status.ERROR, sqlText, e.toString()));
             this.updateLogsTable();
 
             JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
             System.out.println(e);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
     }//GEN-LAST:event_executeButtonActionPerformed
+
 
     private void csvButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_csvButtonActionPerformed
         try {
@@ -347,6 +384,14 @@ public class Tela extends javax.swing.JFrame {
 
     }
 
+    public static boolean isInt(String text) {
+        try {
+            Integer.parseInt(text);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     public void run() {
         /* Set the Nimbus look and feel */
@@ -382,9 +427,12 @@ public class Tela extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton csvButton;
     private javax.swing.JButton executeButton;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JButton jsonButton;
+    private javax.swing.JTextField limitField;
     private javax.swing.JScrollPane log;
-    private javax.swing.JTextField sqlField;
+    private javax.swing.JTextArea sqlField;
+    private javax.swing.JScrollPane sqlPane;
     private javax.swing.JTable tableLog;
     private javax.swing.JScrollPane tablePane;
     private javax.swing.JScrollPane treePane;
