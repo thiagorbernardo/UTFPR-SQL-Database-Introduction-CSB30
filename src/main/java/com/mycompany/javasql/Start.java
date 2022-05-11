@@ -12,12 +12,12 @@ public class Start {
 
         ArrayList<ConnectionData> connections = connectionManager.getConnections();
 
-        if (connections.isEmpty()) {
-            connectionManager.newConnection(new ConnectionData(
-                    "jdbc:mysql://localhost/university",
-                    "root",
-                    "jjJJ@12345"));
-        }
+//        if (connections.isEmpty()) {
+//            connectionManager.newConnection(new ConnectionData(
+//                    "jdbc:mysql://localhost/university",
+//                    "root",
+//                    "jjJJ@12345"));
+//        }
 
         ConnectionData conData = connectionManager.getConnections().get(0);
 

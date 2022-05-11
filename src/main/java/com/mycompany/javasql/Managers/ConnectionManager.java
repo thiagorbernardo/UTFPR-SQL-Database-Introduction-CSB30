@@ -19,7 +19,8 @@ public class  ConnectionManager {
         return this.save.connections;
     }
 
-    public void newConnection(ConnectionData connectionData) {
+    public void newConnection(ConnectionData connectionData) throws SQLException {
+        this.useConnection(connectionData);
         this.save.addConnection(connectionData);
         this.saveJson.save(this.save);
     }

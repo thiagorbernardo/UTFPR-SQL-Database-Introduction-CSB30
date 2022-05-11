@@ -130,17 +130,21 @@ public class TelaInicio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void createButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createButtonActionPerformed
-        this.connectionManager.newConnection(new ConnectionData(
-                jTextField1.getText(),
-                jTextField2.getText(),
-                jTextField3.getText()));
+        try {
+            this.connectionManager.newConnection(new ConnectionData(
+                    jTextField1.getText(),
+                    jTextField2.getText(),
+                    jTextField3.getText()));
+            Tela tela = new Tela(this.connectionManager);
+            tela.run();
+            this.dispose();
+        }catch(Exception e){
 
-        Tela tela = new Tela(this.connectionManager);
-        tela.run();
-        this.dispose();
+        }
     }//GEN-LAST:event_createButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        System.out.println(jComboBox1.getSelectedIndex());
         try {
             this.connectionManager.useConnection(new ConnectionData(
                     connections.get(jComboBox1.getSelectedIndex()).getUrl(),
@@ -151,6 +155,7 @@ public class TelaInicio extends javax.swing.JFrame {
             tela.run();
             this.dispose();
         }catch(Exception e){
+            System.out.println(e.toString());
 
         }
     }//GEN-LAST:event_jButton1ActionPerformed
