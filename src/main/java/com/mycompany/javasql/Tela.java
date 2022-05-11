@@ -11,10 +11,9 @@ import com.mycompany.javasql.Save.ResultMap;
 
 import javax.swing.*;
 import javax.swing.table.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.*;
+import java.util.regex.*;
 
 /**
  * @author João Lucas
@@ -32,6 +31,10 @@ public class Tela extends javax.swing.JFrame {
         initComponents();
 
         /* ------------------------------- JTree ---------------------------------- */
+        this.updateTree();
+    }
+
+    private void updateTree() {
         /* Populating JTree */
         TreeMapper tree = new TreeMapper(this.connectionManager);
         JTree jTree1 = new JTree(tree.getRootNode());
@@ -63,11 +66,6 @@ public class Tela extends javax.swing.JFrame {
 
         sqlField.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         sqlField.setToolTipText("Query");
-        sqlField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sqlFieldActionPerformed(evt);
-            }
-        });
 
         executeButton.setText("Execute");
         executeButton.addActionListener(new java.awt.event.ActionListener() {
@@ -135,15 +133,31 @@ public class Tela extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void sqlFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sqlFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_sqlFieldActionPerformed
-
     private void executeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeButtonActionPerformed
         try {
             Connection connection = connectionManager.getConnection();
             Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            ResultSet rs = st.executeQuery(sqlField.getText());
+
+            Pattern selectPattern = Pattern.compile("SELECT", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+            Pattern updatePattern = Pattern.compile("UPDATE", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+            Pattern createPattern = Pattern.compile("(CREATE|ALTER|DROP)", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+
+            String sqlText = this.sqlField.getText();
+
+            if(updatePattern.matcher(sqlText).find()){
+                st.executeUpdate(sqlText);
+                return;
+            }
+
+            if(!selectPattern.matcher(sqlText).find()){
+                st.execute(sqlText);
+                if(createPattern.matcher(sqlText).find()) {
+                    this.updateTree();
+                }
+                return;
+            }
+
+            ResultSet rs = st.executeQuery(sqlText);
             ResultSetMetaData rsmd = rs.getMetaData();
             int columnQuantity = rsmd.getColumnCount();
             ArrayList<ArrayList<Object>> teste = new ArrayList<>();
@@ -199,7 +213,7 @@ public class Tela extends javax.swing.JFrame {
     }//GEN-LAST:event_executeButtonActionPerformed
 
     private void csvButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_csvButtonActionPerformed
-               Export test = new Export(System.currentTimeMillis() + "");
+        Export test = new Export(System.currentTimeMillis() + "");
         try {
             test.saveCSV(resultMapCSV);
         } catch (NullPointerException e) {
