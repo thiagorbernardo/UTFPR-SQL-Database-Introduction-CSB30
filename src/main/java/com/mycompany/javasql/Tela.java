@@ -11,14 +11,13 @@ import com.mycompany.javasql.Save.ResultMap;
 
 import javax.swing.*;
 import javax.swing.table.*;
+import javax.swing.text.NumberFormatter;
 import java.sql.*;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.regex.*;
 
 
-/**
- * @author João Lucas
- */
 public class Tela extends javax.swing.JFrame {
     /**
      * Creates new form Tela
@@ -33,7 +32,6 @@ public class Tela extends javax.swing.JFrame {
 
         /* ------------------------------- JTree ---------------------------------- */
         this.updateTree();
-
     }
 
     private void updateTree() {
@@ -94,7 +92,7 @@ public class Tela extends javax.swing.JFrame {
         sqlPane = new javax.swing.JScrollPane();
         sqlField = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
-        limitField = new javax.swing.JTextField();
+        limitField = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -122,22 +120,22 @@ public class Tela extends javax.swing.JFrame {
         log.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 
         tableLog.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "#", "Time", "Status", "Query", "Message"
-            }
+                new Object[][]{
+                        {null, null, null, null, null},
+                        {null, null, null, null, null},
+                        {null, null, null, null, null},
+                        {null, null, null, null, null}
+                },
+                new String[]{
+                        "#", "Time", "Status", "Query", "Message"
+                }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+            boolean[] canEdit = new boolean[]{
+                    false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
+                return canEdit[columnIndex];
             }
         });
         tableLog.setToolTipText("");
@@ -149,57 +147,62 @@ public class Tela extends javax.swing.JFrame {
 
         jLabel1.setText("Número de itens:");
 
-        limitField.setText("10000");
-        limitField.setToolTipText("");
+        limitField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        limitField.setText("1000");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(treePane, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(sqlPane))
-                            .addComponent(tablePane, javax.swing.GroupLayout.PREFERRED_SIZE, 940, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jsonButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(executeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(csvButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(limitField)))
-                    .addComponent(log, javax.swing.GroupLayout.PREFERRED_SIZE, 940, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(28, Short.MAX_VALUE))
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addComponent(treePane, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addComponent(sqlPane))
+                                                        .addComponent(tablePane, javax.swing.GroupLayout.PREFERRED_SIZE, 940, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                                        .addComponent(jsonButton, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
+                                                                        .addComponent(csvButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                        .addComponent(jLabel1))
+                                                                .addGap(0, 0, Short.MAX_VALUE))
+                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                                .addGap(0, 0, Short.MAX_VALUE)
+                                                                .addComponent(limitField, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                        .addComponent(executeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                        .addComponent(log, javax.swing.GroupLayout.PREFERRED_SIZE, 940, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(treePane, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
-                            .addGap(11, 11, 11)
-                            .addComponent(executeButton)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jLabel1)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(limitField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(20, 20, 20)
-                            .addComponent(jsonButton)
-                            .addGap(41, 41, 41)
-                            .addComponent(csvButton)))
-                    .addComponent(sqlPane, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tablePane, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(log, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(14, 14, 14))
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(treePane, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGroup(layout.createSequentialGroup()
+                                                        .addGap(2, 2, 2)
+                                                        .addComponent(jLabel1)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(limitField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(18, 18, 18)
+                                                        .addComponent(executeButton)
+                                                        .addGap(27, 27, 27)
+                                                        .addComponent(jsonButton)
+                                                        .addGap(18, 18, 18)
+                                                        .addComponent(csvButton)))
+                                        .addComponent(sqlPane, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tablePane, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(log, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(14, 14, 14))
         );
 
         pack();
@@ -207,51 +210,53 @@ public class Tela extends javax.swing.JFrame {
 
     private void executeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeButtonActionPerformed
         String sqlText = this.sqlField.getText();
-        try {
-            Connection connection = connectionManager.getConnection();
-            Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
-            Pattern selectPattern = Pattern.compile("SELECT", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
-            Pattern updatePattern = Pattern.compile("UPDATE", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
-            Pattern createPattern = Pattern.compile("(CREATE|ALTER|DROP)", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+        for (String query : sqlText.split(";")) {
+            if (Objects.equals(query, "")) continue;
+            try {
+                Connection connection = connectionManager.getConnection();
+                Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
-            long startedTime = System.currentTimeMillis();
-            long endedTime;
+                Pattern selectPattern = Pattern.compile("SELECT", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+                Pattern updatePattern = Pattern.compile("UPDATE", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+                Pattern createPattern = Pattern.compile("(CREATE|ALTER|DROP)", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
 
-            if (updatePattern.matcher(sqlText).find()) {
-                int rowsAffected = st.executeUpdate(sqlText);
-                endedTime = System.currentTimeMillis();
-                // Update log table with executed query
-                this.logData.add(
-                        new LogLine(
-                                this.logData.size() + 1,
-                                Status.SUCCESS,
-                                sqlText,
-                                "Updated " + rowsAffected + " in " + (endedTime - startedTime) + " ms"));
-                this.updateLogsTable();
-                return;
-            }
+                long startedTime = System.currentTimeMillis();
+                long endedTime;
 
-            if (!selectPattern.matcher(sqlText).find()) {
-                st.execute(sqlText);
-                endedTime = System.currentTimeMillis();
-                // Update log table with executed query
-                this.logData.add(
-                        new LogLine(
-                                this.logData.size() + 1,
-                                Status.SUCCESS,
-                                sqlText,
-                                "Executed in " + (endedTime - startedTime) + " ms"));
-                this.updateLogsTable();
-
-                if (createPattern.matcher(sqlText).find()) {
-                    this.updateTree();
+                if (updatePattern.matcher(query).find()) {
+                    int rowsAffected = st.executeUpdate(query);
+                    endedTime = System.currentTimeMillis();
+                    // Update log table with executed query
+                    this.logData.add(
+                            new LogLine(
+                                    this.logData.size() + 1,
+                                    Status.SUCCESS,
+                                    query,
+                                    "Updated " + rowsAffected + " in " + (endedTime - startedTime) + " ms"));
+                    this.updateLogsTable();
+                    continue;
                 }
-                return;
-            }
-            if (isInt(limitField.getText())) {
+
+                if (!selectPattern.matcher(query).find()) {
+                    st.execute(query);
+                    endedTime = System.currentTimeMillis();
+                    // Update log table with executed query
+                    this.logData.add(
+                            new LogLine(
+                                    this.logData.size() + 1,
+                                    Status.SUCCESS,
+                                    query,
+                                    "Executed in " + (endedTime - startedTime) + " ms"));
+                    this.updateLogsTable();
+
+                    if (createPattern.matcher(query).find()) {
+                        this.updateTree();
+                    }
+                    continue;
+                }
                 // Executing query
-                ResultSet rs = st.executeQuery(sqlText);
+                ResultSet rs = st.executeQuery(query);
                 endedTime = System.currentTimeMillis();
 
                 // Getting result set metadata
@@ -284,29 +289,28 @@ public class Tela extends javax.swing.JFrame {
                     result.add(line);
                 }
 
+                int limit = Integer.parseInt(limitField.getText());
+
+                if (result.size() < limit) {
+                    limit = result.size();
+                }
+
                 // Add to logs
                 this.logData.add(
                         new LogLine(
                                 this.logData.size() + 1,
                                 Status.SUCCESS,
-                                sqlText,
-                                "Returned " + result.size() + " rows in " + (endedTime - startedTime) + " ms"));
+                                query,
+                                "Returned " + limit + " rows from " + result.size() + " in " + (endedTime - startedTime) + " ms"));
                 this.updateLogsTable();
-
 
                 // Vectors to add on table
                 String[] column = new String[header.size()];
-                int limit = Integer.parseInt(limitField.getText());
-                int teste;
-                if (limit > result.size()) {
-                    teste = result.size();
-                }else{
-                    teste = limit;
-                }
-                String[][] data = new String[teste][header.size()];
+
+                String[][] data = new String[limit][header.size()];
 
                 // Populating vectors
-                for (int i = 0; i < teste; i++) {
+                for (int i = 0; i < limit; i++) {
                     for (int j = 0; j < header.size(); j++) {
                         column[j] = header.get(j).toString();
                         Object item = result.get(i).get(j);
@@ -315,7 +319,6 @@ public class Tela extends javax.swing.JFrame {
                         } else {
                             data[i][j] = item.toString();
                         }
-
                     }
                 }
 
@@ -326,18 +329,16 @@ public class Tela extends javax.swing.JFrame {
                 table.setShowVerticalLines(true);
                 tablePane.add(table);
                 tablePane.setViewportView(table);
-            } else {
-                throw new Exception("Escreva um numero no campo numero de itens");
+            } catch (SQLException e) {
+                this.logData.add(new LogLine(this.logData.size() + 1, Status.ERROR, sqlText, e.toString()));
+                this.updateLogsTable();
+
+                JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+                System.out.println(e);
+            } catch (Exception e) {
+                System.out.println(e);
+                JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
             }
-
-        } catch (SQLException e) {
-            this.logData.add(new LogLine(this.logData.size() + 1, Status.ERROR, sqlText, e.toString()));
-            this.updateLogsTable();
-
-            JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
-            System.out.println(e);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
     }//GEN-LAST:event_executeButtonActionPerformed
@@ -429,7 +430,7 @@ public class Tela extends javax.swing.JFrame {
     private javax.swing.JButton executeButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JButton jsonButton;
-    private javax.swing.JTextField limitField;
+    private javax.swing.JFormattedTextField limitField;
     private javax.swing.JScrollPane log;
     private javax.swing.JTextArea sqlField;
     private javax.swing.JScrollPane sqlPane;
