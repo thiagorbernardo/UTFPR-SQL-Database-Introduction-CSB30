@@ -139,12 +139,12 @@ public class TelaInicio extends javax.swing.JFrame {
             tela.run();
             this.dispose();
         }catch(Exception e){
-
+            JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println(e.toString());
         }
     }//GEN-LAST:event_createButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        System.out.println(jComboBox1.getSelectedIndex());
         try {
             this.connectionManager.useConnection(new ConnectionData(
                     connections.get(jComboBox1.getSelectedIndex()).getUrl(),
@@ -155,8 +155,8 @@ public class TelaInicio extends javax.swing.JFrame {
             tela.run();
             this.dispose();
         }catch(Exception e){
+            JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
             System.out.println(e.toString());
-
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

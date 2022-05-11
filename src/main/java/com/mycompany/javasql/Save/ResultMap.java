@@ -30,4 +30,8 @@ public class ResultMap {
     public ArrayList<ArrayList<Object>> getCSV() {
         return this.dataCSV;
     }
+
+    public boolean isEmpty() {
+        return this.dataCSV.isEmpty() || this.dataJSON.isEmpty();
+    }
 }

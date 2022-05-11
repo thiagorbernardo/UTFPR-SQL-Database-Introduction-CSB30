@@ -22,8 +22,7 @@ public class Tela extends javax.swing.JFrame {
     /**
      * Creates new form Tela
      */
-    private ResultMap resultMapJSON;
-    private ResultMap resultMapCSV;
+    private ResultMap resultMap = new ResultMap();
     private final ConnectionManager connectionManager;
 
     public Tela(ConnectionManager connectionManager) {
@@ -143,55 +142,64 @@ public class Tela extends javax.swing.JFrame {
             Pattern createPattern = Pattern.compile("(CREATE|ALTER|DROP)", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
 
             String sqlText = this.sqlField.getText();
-
             if(updatePattern.matcher(sqlText).find()){
                 st.executeUpdate(sqlText);
+                // TODO: this.logData.add(new LogLine(this.logData.size()+1, Status.SUCCESS, sqlText, "Updated"));
                 return;
             }
 
             if(!selectPattern.matcher(sqlText).find()){
                 st.execute(sqlText);
+                // TODO: this.logData.add(new LogLine(this.logData.size()+1, Status.SUCCESS, sqlText, "Executed"));
                 if(createPattern.matcher(sqlText).find()) {
                     this.updateTree();
                 }
                 return;
             }
 
+            // Executing query
             ResultSet rs = st.executeQuery(sqlText);
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int columnQuantity = rsmd.getColumnCount();
-            ArrayList<ArrayList<Object>> teste = new ArrayList<>();
+            // Add to logs
+            // TODO: this.logData.add(new LogLine(this.logData.size()+1, Status.SUCCESS, sqlText, "a definir"));
+            // Getting result set metadata
+            ResultSetMetaData rsMetadata = rs.getMetaData();
+            int columnQuantity = rsMetadata.getColumnCount();
+            // Creating header and data from result set
+            ArrayList<ArrayList<Object>> result = new ArrayList<>();
             ArrayList<Object> header = new ArrayList<>();
 
+            // Populating header
             for (int i = 1; i <= columnQuantity; i++) {
-
-                header.add(rsmd.getColumnName(i));
-
+                header.add(rsMetadata.getColumnName(i));
             }
-            resultMapJSON = new ResultMap();
-            resultMapCSV = new ResultMap();
+
+            // Create result map to future save
+            this.resultMap = new ResultMap();
+            this.resultMap.addCSVHeader(header);
+
             while (rs.next()) {
                 Map<String, Object> itemJSON = new HashMap<>();
                 ArrayList<Object> itemCSV = new ArrayList<>();
-                ArrayList<Object> linha = new ArrayList<>();
+                ArrayList<Object> line = new ArrayList<>();
                 for (int i = 1; i <= columnQuantity; i++) {
-
-                    linha.add(rs.getString(i));
-                    itemJSON.put(rsmd.getColumnName(i), rs.getObject(i));
+                    line.add(rs.getString(i));
+                    itemJSON.put(rsMetadata.getColumnName(i), rs.getObject(i));
                     itemCSV.add(rs.getObject(i));
-
                 }
-                resultMapJSON.addJSONItem(itemJSON);
-                resultMapCSV.addCSVItem(itemCSV);
-                teste.add(linha);
+                this.resultMap.addJSONItem(itemJSON);
+                this.resultMap.addCSVItem(itemCSV);
+                result.add(line);
             }
-            String[] column = new String[header.size()];
-            String[][] data = new String[teste.size()][header.size()];
 
-            for (int i = 0; i < teste.size(); i++) {
+            // Vectors to add on table
+            String[] column = new String[header.size()];
+            String[][] data = new String[result.size()][header.size()];
+
+            // Populating vectors
+            for (int i = 0; i < result.size(); i++) {
                 for (int j = 0; j < header.size(); j++) {
                     column[j] = header.get(j).toString();
-                    Object item = teste.get(i).get(j);
+                    Object item = result.get(i).get(j);
                     if (item == null) {
                         data[i][j] = "null";
                     } else {
@@ -200,6 +208,7 @@ public class Tela extends javax.swing.JFrame {
                 }
             }
 
+            // Creating Table
             DefaultTableModel model = new DefaultTableModel(data, column);
             JTable table = new JTable(model);
             table.setShowGrid(true);
@@ -207,26 +216,51 @@ public class Tela extends javax.swing.JFrame {
             tablePane.add(table);
             tablePane.setViewportView(table);
         } catch (SQLException e) {
-            System.out.println("Error " + e.toString());
+            // TODO: this.logData.add(new LogLine(this.logData.size()+1, Status.ERROR, sqlText, "a definir"));
+            // TODO: pensar se vai tirar
+            JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println(e);
         }
 
     }//GEN-LAST:event_executeButtonActionPerformed
 
     private void csvButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_csvButtonActionPerformed
-        Export test = new Export(System.currentTimeMillis() + "");
         try {
-            test.saveCSV(resultMapCSV);
-        } catch (NullPointerException e) {
-            System.out.println("Execute uma query");
+            if(this.resultMap.isEmpty()){
+                throw new Exception("Última query executada não foi um SELECT");
+            }
+
+            String fileName = String.valueOf(System.currentTimeMillis());
+            Export export = new Export(fileName);
+            export.saveCSV(this.resultMap);
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Arquivo Salvo em src/main/resources/export/"+fileName+".csv",
+                    "Error",
+                    JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println(e.toString());
         }
     }//GEN-LAST:event_csvButtonActionPerformed
 
     private void jsonButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        Export test = new Export(System.currentTimeMillis() + "");
         try {
-            test.saveJSON(resultMapJSON);
-        } catch (NullPointerException e) {
-            System.out.println("Execute uma query");
+            if(this.resultMap.isEmpty()){
+                throw new Exception("Última query executada não foi um SELECT");
+            }
+
+            String fileName = String.valueOf(System.currentTimeMillis());
+            Export export = new Export(fileName);
+            export.saveJSON(this.resultMap);
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Arquivo Salvo em src/main/resources/export/"+fileName+".json",
+                    "Error",
+                    JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println(e.toString());
         }
     }
 
