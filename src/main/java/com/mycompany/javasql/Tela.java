@@ -24,7 +24,7 @@ public class Tela extends javax.swing.JFrame {
      */
     private ResultMap resultMap = new ResultMap();
     private final ConnectionManager connectionManager;
-    private ArrayList<LogLine> logData = new ArrayList<>();
+    private final ArrayList<LogLine> logData = new ArrayList<>();
 
     public Tela(ConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
@@ -45,6 +45,34 @@ public class Tela extends javax.swing.JFrame {
         this.treePane.add(jTree1);
         this.treePane.setViewportView(jTree1);
     }
+
+    private void updateLogsTable() {
+        String[][] data = new String[logData.size()][5];
+        for (int i = 0; i < logData.size(); i++) {
+            data[i] = logData.get(i).getLine();
+            DefaultTableModel logModel = new DefaultTableModel(data, new String[]{
+                    "#", "Time", "Status", "Query", "Message"
+            }) {
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return false;
+                }
+            };
+            // Create new table with model
+            JTable logTable = new JTable(logModel);
+
+            // Setting sizes
+            logTable.getColumnModel().getColumn(0).setPreferredWidth(50);
+            logTable.getColumnModel().getColumn(1).setPreferredWidth(120);
+            logTable.getColumnModel().getColumn(2).setPreferredWidth(120);
+            logTable.getColumnModel().getColumn(3).setPreferredWidth(325);
+            logTable.getColumnModel().getColumn(4).setPreferredWidth(325);
+
+            // Add to scroll pane
+            this.log.add(logTable);
+            this.log.setViewportView(logTable);
+        }
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -158,6 +186,7 @@ public class Tela extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void executeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeButtonActionPerformed
+        String sqlText = this.sqlField.getText();
         try {
             Connection connection = connectionManager.getConnection();
             Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -166,18 +195,35 @@ public class Tela extends javax.swing.JFrame {
             Pattern updatePattern = Pattern.compile("UPDATE", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
             Pattern createPattern = Pattern.compile("(CREATE|ALTER|DROP)", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
 
-            String sqlText = this.sqlField.getText();
-
+            long startedTime = System.currentTimeMillis();
+            long endedTime;
             if (updatePattern.matcher(sqlText).find()) {
-                st.executeUpdate(sqlText);
-                // TODO: this.logData.add(new LogLine(this.logData.size()+1, Status.SUCCESS, sqlText, "Updated"));
+                int rowsAffected = st.executeUpdate(sqlText);
+                endedTime = System.currentTimeMillis();
+                // Update log table with executed query
+                this.logData.add(
+                        new LogLine(
+                                this.logData.size() + 1,
+                                Status.SUCCESS,
+                                sqlText,
+                                "Updated " + rowsAffected + " in " + (endedTime - startedTime) + " ms"));
+                this.updateLogsTable();
                 return;
             }
 
             if (!selectPattern.matcher(sqlText).find()) {
                 st.execute(sqlText);
-                // TODO: this.logData.add(new LogLine(this.logData.size()+1, Status.SUCCESS, sqlText, "Executed"));
-                if(createPattern.matcher(sqlText).find()) {
+                endedTime = System.currentTimeMillis();
+                // Update log table with executed query
+                this.logData.add(
+                        new LogLine(
+                                this.logData.size() + 1,
+                                Status.SUCCESS,
+                                sqlText,
+                                "Executed in " + (endedTime - startedTime) + " ms"));
+                this.updateLogsTable();
+
+                if (createPattern.matcher(sqlText).find()) {
                     this.updateTree();
                 }
                 return;
@@ -185,8 +231,8 @@ public class Tela extends javax.swing.JFrame {
 
             // Executing query
             ResultSet rs = st.executeQuery(sqlText);
-            // Add to logs
-            // TODO: this.logData.add(new LogLine(this.logData.size()+1, Status.SUCCESS, sqlText, "a definir"));
+            endedTime = System.currentTimeMillis();
+
             // Getting result set metadata
             ResultSetMetaData rsMetadata = rs.getMetaData();
             int columnQuantity = rsMetadata.getColumnCount();
@@ -217,6 +263,15 @@ public class Tela extends javax.swing.JFrame {
                 result.add(line);
             }
 
+            // Add to logs
+            this.logData.add(
+                    new LogLine(
+                            this.logData.size() + 1,
+                            Status.SUCCESS,
+                            sqlText,
+                            "Returned " + result.size() + " rows in " + (endedTime - startedTime) + " ms"));
+            this.updateLogsTable();
+
             // Vectors to add on table
             String[] column = new String[header.size()];
             String[][] data = new String[result.size()][header.size()];
@@ -242,8 +297,9 @@ public class Tela extends javax.swing.JFrame {
             tablePane.add(table);
             tablePane.setViewportView(table);
         } catch (SQLException e) {
-            // TODO: this.logData.add(new LogLine(this.logData.size()+1, Status.ERROR, sqlText, "a definir"));
-            // TODO: pensar se vai tirar
+            this.logData.add(new LogLine(this.logData.size()+1, Status.ERROR, sqlText, e.toString()));
+            this.updateLogsTable();
+
             JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
             System.out.println(e);
         }
@@ -252,7 +308,7 @@ public class Tela extends javax.swing.JFrame {
 
     private void csvButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_csvButtonActionPerformed
         try {
-            if(this.resultMap.isEmpty()){
+            if (this.resultMap.isEmpty()) {
                 throw new Exception("Última query executada não foi um SELECT");
             }
 
@@ -261,7 +317,7 @@ public class Tela extends javax.swing.JFrame {
             export.saveCSV(this.resultMap);
             JOptionPane.showMessageDialog(
                     this,
-                    "Arquivo Salvo em src/main/resources/export/"+fileName+".csv",
+                    "Arquivo Salvo em src/main/resources/export/" + fileName + ".csv",
                     "Error",
                     JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception e) {
@@ -272,7 +328,7 @@ public class Tela extends javax.swing.JFrame {
 
     private void jsonButtonActionPerformed(java.awt.event.ActionEvent evt) {
         try {
-            if(this.resultMap.isEmpty()){
+            if (this.resultMap.isEmpty()) {
                 throw new Exception("Última query executada não foi um SELECT");
             }
 
@@ -281,7 +337,7 @@ public class Tela extends javax.swing.JFrame {
             export.saveJSON(this.resultMap);
             JOptionPane.showMessageDialog(
                     this,
-                    "Arquivo Salvo em src/main/resources/export/"+fileName+".json",
+                    "Arquivo Salvo em src/main/resources/export/" + fileName + ".json",
                     "Error",
                     JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception e) {
