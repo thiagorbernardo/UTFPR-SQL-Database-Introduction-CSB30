@@ -210,10 +210,10 @@ public class Tela extends javax.swing.JFrame {
 
     private void executeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeButtonActionPerformed
         String sqlText = this.sqlField.getText();
-
-        for (String query : sqlText.split(";")) {
-            if (Objects.equals(query, "")) continue;
-            try {
+        try {
+            if (Objects.equals(sqlText, "")) return;
+            for (String query : sqlText.split(";")) {
+                if (Objects.equals(query, "")) continue;
                 Connection connection = connectionManager.getConnection();
                 Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
@@ -329,18 +329,18 @@ public class Tela extends javax.swing.JFrame {
                 table.setShowVerticalLines(true);
                 tablePane.add(table);
                 tablePane.setViewportView(table);
-            } catch (SQLException e) {
-                this.logData.add(new LogLine(this.logData.size() + 1, Status.ERROR, sqlText, e.toString()));
-                this.updateLogsTable();
-
-                JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
-                System.out.println(e);
-            } catch (Exception e) {
-                System.out.println(e);
-                JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
             }
-        }
 
+        } catch (SQLException e) {
+            this.logData.add(new LogLine(this.logData.size() + 1, Status.ERROR, sqlText, e.toString()));
+            this.updateLogsTable();
+
+            JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println(e);
+        } catch (Exception e) {
+            System.out.println(e);
+            JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_executeButtonActionPerformed
 
 

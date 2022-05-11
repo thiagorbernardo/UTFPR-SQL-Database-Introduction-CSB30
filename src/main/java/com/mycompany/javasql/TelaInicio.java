@@ -27,7 +27,6 @@ public class TelaInicio extends javax.swing.JFrame {
         this.jComboBox1 = new javax.swing.JComboBox<>();
 
         for (ConnectionData connection : connections) {
-            System.out.println(connection.toString());
             this.jComboBox1.addItem(connection);
             comboBoxModel.addElement(connection);
         }
@@ -147,7 +146,7 @@ public class TelaInicio extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            this.connectionManager.useConnection(this.connections.get(jComboBox1.getSelectedIndex()));
+            this.connectionManager.useConnection(this.connections.get(this.jComboBox1.getSelectedIndex()));
 
             Tela tela = new Tela(this.connectionManager);
             tela.run();
