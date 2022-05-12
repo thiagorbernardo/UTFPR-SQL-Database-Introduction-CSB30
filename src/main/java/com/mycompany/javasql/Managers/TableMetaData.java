@@ -28,20 +28,6 @@ public class TableMetaData {
         this.columns.add(new ColumnMetaData(name, type, size, isPrimaryKey));
     }
 
-    public void selfPrint() {
-        System.out.println("Table name: " + this.name);
-        System.out.println("Table type: " + this.type);
-        StringBuilder columns = new StringBuilder("Columns:");
-        for (ColumnMetaData col : this.columns) {
-            if(col.isPrimaryKey){
-                columns.append(" ").append("PRIMARY_KEY");
-            }
-            columns.append(" ").append(col.name).append(" ").append(col.type).append("(").append(col.size).append(")");
-        }
-        System.out.println(columns);
-        System.out.println();
-    }
-
     public String getName(){
         return this.name;
     }

@@ -278,9 +278,10 @@ public class Tela extends javax.swing.JFrame {
                     ArrayList<Object> itemCSV = new ArrayList<>();
                     ArrayList<Object> line = new ArrayList<>();
                     for (int i = 1; i <= columnQuantity; i++) {
-                        line.add(rs.getString(i));
-                        itemJSON.put(rsMetadata.getColumnName(i), rs.getObject(i));
-                        itemCSV.add(rs.getObject(i));
+                        Object item = rsMetadata.getColumnType(i) == -4 ? "BLOB" : rs.getObject(i);
+                        line.add(item.toString());
+                        itemJSON.put(rsMetadata.getColumnName(i), item);
+                        itemCSV.add(item);
                     }
                     this.resultMap.addJSONItem(itemJSON);
                     this.resultMap.addCSVItem(itemCSV);
