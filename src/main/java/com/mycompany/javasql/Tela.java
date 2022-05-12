@@ -213,13 +213,14 @@ public class Tela extends javax.swing.JFrame {
         try {
             if (Objects.equals(sqlText, "")) return;
             for (String query : sqlText.split(";")) {
+                query = query.trim();
                 if (Objects.equals(query, "")) continue;
                 Connection connection = connectionManager.getConnection();
                 Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
 
-                Pattern selectPattern = Pattern.compile("SELECT", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
-                Pattern updatePattern = Pattern.compile("UPDATE", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
-                Pattern createPattern = Pattern.compile("(CREATE|ALTER|DROP)", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+                Pattern selectPattern = Pattern.compile("^SELECT", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+                Pattern updatePattern = Pattern.compile("^UPDATE", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+                Pattern createPattern = Pattern.compile("^(CREATE|ALTER|DROP)", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
 
                 long startedTime = System.currentTimeMillis();
                 long endedTime;
@@ -329,6 +330,9 @@ public class Tela extends javax.swing.JFrame {
                 table.setShowVerticalLines(true);
                 tablePane.add(table);
                 tablePane.setViewportView(table);
+
+                // Updating result map with actual limit size
+                this.resultMap.sliceData(limit);
             }
 
         } catch (SQLException e) {
@@ -356,11 +360,11 @@ public class Tela extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(
                     this,
                     "Arquivo Salvo em src/main/resources/export/" + fileName + ".csv",
-                    "Error",
+                    "Sucesso",
                     JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
-            System.out.println(e.toString());
+            System.out.println(e);
         }
     }//GEN-LAST:event_csvButtonActionPerformed
 
@@ -376,11 +380,11 @@ public class Tela extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(
                     this,
                     "Arquivo Salvo em src/main/resources/export/" + fileName + ".json",
-                    "Error",
+                    "Sucesso",
                     JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.toString(), "Error", JOptionPane.ERROR_MESSAGE);
-            System.out.println(e.toString());
+            System.out.println(e);
         }
 
     }

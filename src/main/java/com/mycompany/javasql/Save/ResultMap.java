@@ -34,4 +34,9 @@ public class ResultMap {
     public boolean isEmpty() {
         return this.dataCSV.isEmpty() || this.dataJSON.isEmpty();
     }
+
+    public void sliceData(int cutSize) {
+        this.dataJSON = new ArrayList<>(this.dataJSON.subList(0, cutSize));
+        this.dataCSV = new ArrayList<>(this.dataCSV.subList(0, cutSize + 1));
+    }
 }
